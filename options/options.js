@@ -69,22 +69,23 @@ function restoreOptions() {
     let gettingItem = browser.storage.local.get()
     gettingItem.then((res) => {
         document.querySelector('#enabled').checked = res.enabled || true
-        document.querySelector('#threshold').value = res.threshold || -50
-        document.querySelector('#knee').value = res.knee || 20
-        document.querySelector('#attack').value = res.attack || 0.25
+        document.querySelector('#threshold').value = res.threshold || -60
+        document.querySelector('#knee').value = res.knee || 30.0
+        document.querySelector('#attack').value = res.attack || 0.150
         document.querySelector('#release').value = res.release || 0.25
-        document.querySelector('#ratio').value = res.ratio || 10
-        document.querySelector('#gain').value = res.gain || 1
+        document.querySelector('#ratio').value = res.ratio || 10.0
+        document.querySelector('#gain').value = res.gain || 1.0
+        updateValueDisplay(res)
     })
 }
 function setDefaults() {
     document.querySelector('#enabled').checked = true
-    document.querySelector('#threshold').value = -50
-    document.querySelector('#knee').value = 20
-    document.querySelector('#attack').value = 0.25
-    document.querySelector('#release').value = 0.25
-    document.querySelector('#ratio').value = 10
-    document.querySelector('#gain').value = 1
+    document.querySelector('#threshold').value = -60
+    document.querySelector('#knee').value = 30.0
+    document.querySelector('#attack').value = 0.150
+    document.querySelector('#release').value = 0.250
+    document.querySelector('#ratio').value = 10.0
+    document.querySelector('#gain').value = 1.0
     saveSettings()
 }
 

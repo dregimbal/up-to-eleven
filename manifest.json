@@ -1,6 +1,7 @@
 {
     "name": "up-to-eleven",
     "description": "Increase the volume of audio on a tab, making quiet sounds lounder and limiting loud sounds.",
+    "version": "0.5",
     "manifest_version": 2,
     "background": {
         "scripts": [
@@ -39,6 +40,5 @@
         "https://www.youtube.com/watch*",
         "activeTab",
         "storage"
-    ],
-    "version": "0.4"
+    ]
 }
