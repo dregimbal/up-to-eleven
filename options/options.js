@@ -2,9 +2,9 @@
 function setLiveUpdate(enable) {
     let elevenSettingsForm = document.getElementById('elevenSettingsForm')
     if (enable) {
-        elevenSettingsForm.addEventListener('change', saveSettings)
+        elevenSettingsForm.addEventListener('input', saveSettings)
     } else {
-        elevenSettingsForm.removeEventListener('change', saveSettings)
+        elevenSettingsForm.removeEventListener('input', saveSettings)
     }
 }
 
@@ -76,12 +76,12 @@ function restoreOptions() {
     let gettingItem = browser.storage.local.get()
     gettingItem.then((res) => {
         document.querySelector('#live').checked = res.live || true
-        document.querySelector('#enabled').checked = res.enabled || false
-        document.querySelector('#attack').value = res.attack || 0.003
-        document.querySelector('#knee').value = res.knee || 30
-        document.querySelector('#ratio').value = res.ratio || 12
+        document.querySelector('#enabled').checked = res.enabled || true
+        document.querySelector('#attack').value = res.attack || 0.25
+        document.querySelector('#knee').value = res.knee || 20
+        document.querySelector('#ratio').value = res.ratio || 10
         document.querySelector('#release').value = res.release || 0.25
-        document.querySelector('#threshold').value = res.threshold || -24
+        document.querySelector('#threshold').value = res.threshold || -50
         document.querySelector('#gain').value = res.gain || 1
         setLiveUpdate(res.live || true)
     })
@@ -89,4 +89,3 @@ function restoreOptions() {
 
 document.addEventListener('DOMContentLoaded', restoreOptions)
 document.querySelector('form').addEventListener('submit', saveSettings)
-document.querySelector('form').addEventListener('submit', preventFormSubmit)
