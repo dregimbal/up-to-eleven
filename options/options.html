@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html class="browser-style"
+    style="background-color: #fbfbfb;">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet"
+            href="options.css">
+    </head>
+    <body class="panel">
+        <form id="elevenSettingsForm">
+            <header class="panel-section panel-section-header">
+                <div class="text-section-header">Up to Eleven</div>
+            </header>
+            <div class="panel-section panel-section-formElements">
+                <div class="panel-formElements-item browser-style">
+                    <label for="live">Update Live:</label>
+                    <input id="live"
+                        type="checkbox"
+                        value="true"
+                        checked>
+                </div>
+                <div class="panel-formElements-item browser-style">
+                    <label for="enabled">Enabled:</label>
+                    <input id="enabled"
+                        type="checkbox"
+                        value="true">
+                </div>
+                <div class="panel-formElements-item browser-style">
+                    <label for="attack">Attack:</label>
+                    <input id="attack"
+                        type="number"
+                        min="0"
+                        max="1"
+                        step="0.001"
+                        value="0.003">
+                </div>
+                <div class="panel-formElements-item browser-style">
+                    <label for="knee">Knee:</label>
+                    <input id="knee"
+                        type="number"
+                        min="0"
+                        max="40"
+                        step="1"
+                        value="30">
+                </div>
+                <div class="panel-formElements-item browser-style">
+                    <label for="ratio">Ratio:</label>
+                    <input id="ratio"
+                        type="number"
+                        min="0"
+                        max="20"
+                        step="1"
+                        value="12">
+                </div>
+                <div class="panel-formElements-item browser-style">
+                    <label for="release">Release:</label>
+                    <input id="release"
+                        type="number"
+                        min="0"
+                        max="1"
+                        step="0.05"
+                        value="0.25">
+                </div>
+                <div class="panel-formElements-item browser-style">
+                    <label for="threshold">Threshold:</label>
+                    <input id="threshold"
+                        type="number"
+                        min="-100"
+                        max="0"
+                        step="1"
+                        value="-24">
+                </div>
+                <div class="panel-formElements-item browser-style">
+                    <label for="gain">Gain:</label>
+                    <input id="gain"
+                        type="number"
+                        min="-1"
+                        max="10"
+                        step="0.5"
+                        value="1">
+                </div>
+                <div class="panel-formElements-item">
+                    <button type="reset"
+                        class="browser-style">Defaults</button>
+                </div>
+                <div class="panel-formElements-item">
+                    <button type="submit"
+                        class="browser-style default">Confirm</button>
+                </div>
+            </div>
+        </form>
+        <script src="/options/options.js"></script>
+    </body>
+</html>

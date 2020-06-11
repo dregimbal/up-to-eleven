@@ -1,20 +1,44 @@
 {
+    "name": "up-to-eleven",
     "description": "Increase the volume of audio on a tab, making quiet sounds lounder and limiting loud sounds.",
     "manifest_version": 2,
-    "name": "up-to-eleven",
-    "version": "0.3",
     "background": {
         "scripts": [
-            "up-to-eleven.js"
+            "background.js"
         ]
     },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://www.youtube.com/watch*"
+            ],
+            "js": [
+                "content-script.js"
+            ]
+        }
+    ],
     "browser_action": {
         "default_icon": {
-            "48": "icons/uptoeleven-disabled.png",
-            "96": "icons/uptoeleven@2x-disabled.png"
-        }
+            "48": "icons/uptoeleven-enabled.png",
+            "96": "icons/uptoeleven@2x-enabled.png"
+        },
+        "default_popup": "options/options.html",
+        "default_title": "Audio compressor options"
+    },
+    "homepage_url": "https://github.com/dregimbal/up-to-eleven",
+    "icons": {
+        "48": "icons/uptoeleven-enabled.png",
+        "96": "icons/uptoeleven@2x-enabled.png"
+    },
+    "options_ui": {
+        "browser_style": true,
+        "open_in_tab": false,
+        "page": "options/options.html"
     },
     "permissions": [
-        "activeTab"
-    ]
+        "https://www.youtube.com/watch*",
+        "activeTab",
+        "storage"
+    ],
+    "version": "0.4"
 }
