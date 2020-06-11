@@ -544,3 +544,7 @@ button.browser-style:focus:not(:disabled) {
     width: 1px;
     z-index: 99;
 }
+
+.valueDisplay {
+    width: 50px;
+}
