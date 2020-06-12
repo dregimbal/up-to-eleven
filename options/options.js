@@ -89,8 +89,16 @@ function setDefaults() {
     saveSettings()
 }
 
+function reInit() {
+    restoreOptions()
+    saveSettings()
+}
+
 document.addEventListener('DOMContentLoaded', restoreOptions)
 let elevenSettingsForm = document.getElementById('elevenSettingsForm')
 elevenSettingsForm.addEventListener('input', saveSettings)
 let resetBtn = document.getElementById('resetToDefault')
 resetBtn.addEventListener('click', setDefaults)
+
+let reInitBtn = document.getElementById('reInit')
+reInitBtn.addEventListener('click', reInit)
