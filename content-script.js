@@ -38,16 +38,44 @@ function updateCompressor(settings) {
     window.ElevenAudioGainNode.gain.setValueAtTime(settings.gain, window.ElevenAudioContext.currentTime)
 }
 
+function reinitializeCompressor() {
+    disableCompressor()
+    let element = document.querySelector('video')
+    window.ElevenAudioSource = window.ElevenAudioContext.createMediaElementSource(element)
+    setupCompressor()
+}
+
+function showProps(obj, objName, depth = 0) {
+    var result = ``
+    for (var i in obj) {
+        // obj.hasOwnProperty() is used to filter out properties from the object's prototype chain
+        if (obj.hasOwnProperty(i)) {
+            if (typeof obj[i] === 'object' && depth < 3) {
+                showProps(obj[i], `${objName}.${i}`, depth + 1)
+            } else {
+                result += `${objName}.${i} = ${obj[i]}\n`
+            }
+        }
+    }
+    console.log(result)
+}
 
 let myPort = browser.runtime.connect({ name: "content-script-port" })
-
-myPort.onMessage.addListener(settings => {
-    if (settings.enabled) {
-        if (!compressorSetup) {
-            setupCompressor()
+myPort.onMessage.addListener((message, sender, sendResponse) => {
+    // showProps(message, "message")
+    // showProps(sender, "sender")
+    // showProps(sendResponse, "sendResponse")
+    if (message.command === "reset") {
+        console.log("Resetting")
+        reinitializeCompressor()
+    } else {
+        if (message.settings.enabled) {
+            if (!compressorSetup) {
+                setupCompressor()
+            }
+            updateCompressor(message.settings)
+        } else if (compressorSetup) {
+            disableCompressor()
         }
-        updateCompressor(settings)
-    } else if (compressorSetup) {
-        disableCompressor()
     }
 })

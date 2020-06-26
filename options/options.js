@@ -18,9 +18,8 @@ function minMax(number, min, max) {
     return Math.min(Math.max(number, min), max)
 }
 
-function saveSettings() {
-    // console.log('saving settings')
-    let settings = {
+function getValuesFromForm() {
+    let values = {
         // Use the compressor
         enabled: document.querySelector('#enabled').checked,
         // threshold: The decibel value above which the compression will start taking effect
@@ -51,9 +50,29 @@ function saveSettings() {
         // gain: Additional gain to offset the compressor
         gain: minMax(document.querySelector('#gain').valueAsNumber, -1, 10)
     }
+    return values
+}
 
-    browser.storage.local.set(settings)
+function saveDefaultSettings(settings) {
+    console.log('Saving default settings')
+    let save = browser.storage.local.set({ defaults: settings })
+    save.then(() => { console.log("okay") })
+}
+
+function saveTabSettings(tabId, settings) {
+    settings.tabId = tabId
+    browser.storage.local.set({ [tabId]: settings })
+}
+
+function postSettings() {
+    let settings = getValuesFromForm()
     updateValueDisplay(settings)
+    browser.tabs.query({ currentWindow: true, active: true })
+        .then((tabs) => {
+            let tabId = tabs[0].id
+            saveTabSettings(tabId, settings)
+            port.postMessage({ command: "settings", tab: tabId, settings: settings })
+        })
 }
 
 function updateValueDisplay(values) {
@@ -65,40 +84,86 @@ function updateValueDisplay(values) {
     document.getElementById('gainValue').innerText = `${values.gain.toFixed(1)}`
 }
 
-function restoreOptions() {
-    let gettingItem = browser.storage.local.get()
-    gettingItem.then((res) => {
-        document.querySelector('#enabled').checked = res.enabled || true
-        document.querySelector('#threshold').value = res.threshold || -60
-        document.querySelector('#knee').value = res.knee || 30.0
-        document.querySelector('#attack').value = res.attack || 0.150
-        document.querySelector('#release').value = res.release || 0.25
-        document.querySelector('#ratio').value = res.ratio || 10.0
-        document.querySelector('#gain').value = res.gain || 1.0
-        updateValueDisplay(res)
-    })
+function getTabId() {
+    return browser.tabs.query({ currentWindow: true, active: true })
+        .then(tabs => {
+            return new Promise((resolve, reject) => {
+                resolve(tabs[0].id)
+            })
+        })
 }
-function setDefaults() {
-    document.querySelector('#enabled').checked = true
-    document.querySelector('#threshold').value = -60
-    document.querySelector('#knee').value = 30.0
-    document.querySelector('#attack').value = 0.150
-    document.querySelector('#release').value = 0.250
-    document.querySelector('#ratio').value = 10.0
-    document.querySelector('#gain').value = 1.0
-    saveSettings()
+
+function loadTabSettings(tabId) {
+    return browser.storage.local.get(`${tabId}`)
+        .then(settings => {
+            return new Promise((resolve, reject) => {
+                if (typeof settings[tabId] === 'undefined' || settings[tabId].tabId !== tabId) {
+                    reject(`No data for tab ${tabId} found`)
+                } else {
+                    resolve(settings[tabId])
+                }
+            })
+        })
+}
+
+function setInputValues(settings) {
+    // console.log(settings)
+    document.querySelector('#enabled').checked = settings.enabled || true
+    document.querySelector('#threshold').value = settings.threshold || -60
+    document.querySelector('#knee').value = settings.knee || 30.0
+    document.querySelector('#attack').value = settings.attack || 0.150
+    document.querySelector('#release').value = settings.release || 0.25
+    document.querySelector('#ratio').value = settings.ratio || 10.0
+    document.querySelector('#gain').value = settings.gain || 1.0
+    updateValueDisplay(settings)
+}
+
+function domLoaded() {
+    browser.storage.local.get('defaults')
+        .then(defaults => setInputValues(defaults.defaults))
+        .catch(err => console.log(err))
+        .then(getTabId)
+        .then(tabId => loadTabSettings(tabId))
+        .then(settings => setInputValues(settings))
+        .catch(err => console.log(err))
+
+}
+
+function resetToDefaults() {
+    browser.storage.local.get('defaults')
+        .then(defaults => {
+            setInputValues(defaults.defaults)
+            getTabId()
+                .then(tabId => saveTabSettings(tabId, defaults.defaults))
+                .catch(err => console.log(err))
+        })
+        .catch(err => console.log(err))
+}
+
+function saveAsDefaults() {
+    let settings = getValuesFromForm()
+    saveDefaultSettings(settings)
 }
 
 function reInit() {
-    restoreOptions()
-    saveSettings()
+    browser.tabs.query({ currentWindow: true, active: true })
+        .then((tabs) => {
+            port.postMessage({ command: "reset", tab: tabs[0].id })
+        })
 }
 
-document.addEventListener('DOMContentLoaded', restoreOptions)
+let port = browser.runtime.connect({ name: "options-port" })
+
+document.addEventListener('DOMContentLoaded', domLoaded)
+
 let elevenSettingsForm = document.getElementById('elevenSettingsForm')
-elevenSettingsForm.addEventListener('input', saveSettings)
+elevenSettingsForm.addEventListener('input', postSettings)
+
 let resetBtn = document.getElementById('resetToDefault')
-resetBtn.addEventListener('click', setDefaults)
+resetBtn.addEventListener('click', resetToDefaults)
+
+let saveBtn = document.getElementById('saveAsDefaults')
+saveBtn.addEventListener('click', saveAsDefaults)
 
 let reInitBtn = document.getElementById('reInit')
 reInitBtn.addEventListener('click', reInit)
