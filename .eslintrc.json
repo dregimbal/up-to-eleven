@@ -96,7 +96,10 @@
         ], // disallow reserved words being used as object literal keys (off by default)
         "quotes": [
             "warn",
-            "single"
+            "single",
+            {
+                "allowTemplateLiterals": true
+            }
         ],
         "semi": [
             "warn",

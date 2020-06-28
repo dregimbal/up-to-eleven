@@ -1,7 +1,7 @@
 {
     "name": "up-to-eleven",
     "description": "Increase the volume of audio on a tab, making quiet sounds lounder and limiting loud sounds.",
-    "version": "0.6",
+    "version": "0.7",
     "manifest_version": 2,
     "background": {
         "scripts": [
@@ -29,7 +29,7 @@
     "browser_specific_settings": {
         "gecko": {
             "id": "{cc6d6ee5-83e0-4d09-bcab-e36d04ede784}",
-            "strict_min_version": "42.0"
+            "strict_min_version": "65.0"
         }
     },
     "homepage_url": "https://github.com/dregimbal/up-to-eleven",

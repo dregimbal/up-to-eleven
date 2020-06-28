@@ -1,5 +1,11 @@
 # Up To Eleven Changelog
 
+## v0.7
+
+- Fixed bug where opening the options popup would always show the compressor as enabled
+- Fixed bug where disabling then enabling the compressor allowed un-compressed audio to passthrough
+- Create/save defaults when installing the addon
+
 ## v0.6
 
 - Added button to reinitialize the compressor if it's not working

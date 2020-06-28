@@ -1,27 +1,13 @@
+
 /**
  * @description Limit a number to a range
  * @param {number} number The value to limit
  * @param {number} min The minimum value
  * @param {number} max The maximum value
- * @returns The number, limited to the range
+ * @returns {number} The number, limited to the range
  */
-function minMax(number, min, max) {
-    if (typeof number !== "number") {
-        number = 0
-    }
-    if (typeof min !== "number") {
-        min = 0
-    }
-    if (typeof max !== "number") {
-        max = 1
-    }
+function minMax(number = 0, min = 0, max = 1) {
     return Math.min(Math.max(number, min), max)
-}
-
-function saveSettings() {
-    let settings = getValuesFromForm()
-
-    browser.storage.local.set({ defaults: settings })
 }
 
 function getValuesFromForm() {
@@ -59,6 +45,12 @@ function getValuesFromForm() {
     return values
 }
 
+function saveSettings() {
+    let settings = getValuesFromForm()
+
+    browser.storage.local.set({ defaults: settings })
+}
+
 function updateValueDisplay() {
     let values = getValuesFromForm()
     document.getElementById('thresholdValue').innerText = `${values.threshold.toFixed(1)}dB`
@@ -72,7 +64,7 @@ function updateValueDisplay() {
 function restoreOptions() {
     let gettingItem = browser.storage.local.get('defaults')
     gettingItem.then((res) => {
-        document.querySelector('#enabled').checked = res.enabled || true
+        document.querySelector('#enabled').checked = res.enabled
         document.querySelector('#threshold').value = res.threshold || -60
         document.querySelector('#knee').value = res.knee || 30.0
         document.querySelector('#attack').value = res.attack || 0.150
